@@ -1,0 +1,60 @@
+<div class="wrapper">
+  <div class="btn-form">
+    <button class="btn" (click)="showFormAddTask=!showFormAddTask" style="width: 7rem;">
+      <p *ngIf="!showFormAddTask">Add task</p>
+      <p *ngIf="showFormAddTask">Hidden</p>
+    </button>
+    <div class="message" *ngIf="showMessage" (click)="showMessage=!showMessage">
+      <label class="info">New task has been successfully added to the list!</label>
+    </div>
+  </div>
+
+  <form class="form" *ngIf="showFormAddTask" [formGroup]="formAddTask">
+    <div class="title">
+      <h1 class="label">New task</h1>
+    </div>
+    <hr>
+    <table>
+      <tr>
+        <div class="inputFields">
+          <div class="form-control">
+            <label>Name</label>
+            <input type="text" placeholder="Enter your name..." formControlName="name" [ngStyle]="{
+                  border: formAddTask.get('name')?.invalid && (formAddTask.get('name')?.touched || this.submitted) ? '1px solid red' : '1px solid #ccc'}">
+            <div
+              *ngIf="formAddTask.get('name')?.invalid && (formAddTask.get('name')?.touched || this.submitted)"
+              class="validation">
+              <small *ngIf="formAddTask.get('name')?.errors?.required">Required field</small>
+            </div>
+          </div>
+          <div class="form-control">
+            <label>Email</label>
+            <input type="text" placeholder="Enter your email..." formControlName="email" [ngStyle]="{
+                  border: formAddTask.get('email')?.invalid && (formAddTask.get('email')?.touched || this.submitted) ? '1px solid red' : '1px solid #ccc'}">
+            <div
+              *ngIf="formAddTask.get('email')?.invalid && (formAddTask.get('email')?.touched || this.submitted)"
+              class="validation">
+              <small *ngIf="formAddTask.get('email')?.errors?.required">Required field</small>
+              <small *ngIf="formAddTask.get('email')?.errors?.email">Email invalid</small>
+            </div>
+          </div>
+        </div>
+      </tr>
+      <tr>
+        <div class="form-control">
+          <label>Task text</label>
+          <textarea type="text" placeholder="Enter your task text..."
+                style="height:80px; resize: none;" formControlName="text" [ngStyle]="{
+                      border: formAddTask.get('text')?.invalid && (formAddTask.get('text')?.touched || this.submitted) ? '1px solid red' : '1px solid #ccc'}"></textarea>
+          <div
+            *ngIf="formAddTask.get('text')?.invalid && (formAddTask.get('text')?.touched || this.submitted)"
+            class="validation">
+            <small *ngIf="formAddTask.get('text')?.errors?.required">Required field</small>
+          </div>
+        </div>
+      </tr>
+    </table>
+    <hr>
+    <button class="btn" type="submit" (click)="addTask()">Add</button>
+  </form>
+</div>

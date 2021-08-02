@@ -1,0 +1,80 @@
+.wrapper {
+  position: relative;
+  display: grid ;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  width: 75rem;
+  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+}
+.btn-form {
+  display: block;
+  width: 75rem;
+  margin: 1rem 0;
+}
+.inputFields > div {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+}
+
+.form-control {
+  padding: 1rem 1rem 0 1rem;
+  padding-bottom: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.btn {
+  display: inline-block;
+  background: #333333;
+  color: #fff;
+  padding: 0.4rem 1.3rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  margin: 1rem;
+  transition: opacity 0.2s ease-in;
+  outline: none;
+  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+
+  &:disabled {
+    background: #ccc;
+    color: #000;
+    cursor: not-allowed;
+  }
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+hr {
+  margin: 1rem 1rem 0 1rem;
+}
+
+.title {
+  margin: 1rem 0;
+}
+
+tr {
+  height: 5rem;
+}
+
+.message {
+  float: right;
+  margin: 0.5rem 1rem;
+  width: 64rem;
+  height: 3rem;
+  background: #c2eacc;
+  text-align: center;
+  padding: 1rem;
+  font-size: 22px;
+  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+}

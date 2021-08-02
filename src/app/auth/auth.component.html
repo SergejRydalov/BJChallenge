@@ -1,0 +1,37 @@
+<div class="auth">
+  <label class="title">Authorization</label>
+  <label class="message" *ngIf="errorAuth">Invalid login or password!</label>
+  <hr>
+  <form [formGroup]="formAuth">
+    <table>
+      <tr>
+        <div>
+        <label>Login</label>
+        <input type="text" placeholder="Enter your login..." formControlName="login" [ngStyle]="{
+          border: formAuth.get('login')?.invalid && (formAuth.get('login')?.touched || this.submitted) ? '1px solid red' : '1px solid #ccc'}">
+        </div>
+        <div
+          *ngIf="formAuth.get('login')?.invalid && (formAuth.get('login')?.touched || this.submitted)"
+          class="validation">
+          <small *ngIf="formAuth.get('login')?.errors?.required">Required field</small>
+        </div>
+      </tr>
+      <tr>
+        <div>
+          <label>Password</label>
+          <input type="password" placeholder="Enter your password..." formControlName="password" [ngStyle]="{
+          border: formAuth.get('password')?.invalid && (formAuth.get('password')?.touched || this.submitted) ? '1px solid red' : '1px solid #ccc'}">
+        </div>
+        <div
+          *ngIf="formAuth.get('password')?.invalid && (formAuth.get('password')?.touched || this.submitted)"
+          class="validation">
+          <small *ngIf="formAuth.get('password')?.errors?.required">Required field</small>
+        </div>
+      </tr>
+    </table>
+  </form>
+  <div class="btn-line">
+    <button class="btn" type="submit" (click)="submitAuth()">sign</button>
+    <button class="btn-white" type="button" (click)="close()">close</button>
+  </div>
+</div>
