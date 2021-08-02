@@ -1,0 +1,64 @@
+<div class="example-container">
+  <div class="wrapper">
+    <mat-progress-bar mode="indeterminate" *ngIf="isLoadingResults"></mat-progress-bar>
+    <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+        API rate limit has been reached. It will be reset in one minute.
+    </div>
+    <div class="example-table-container">
+
+      <table mat-table [dataSource]="data" class="example-table"
+             matSort  matSortDisableClear matSortDirection="desc">
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Username</th>
+          <td mat-cell *matCellDef="let row">{{row.username}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Email</th>
+          <td mat-cell *matCellDef="let row">{{row.email}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="text">
+          <th mat-header-cell *matHeaderCellDef width ="20%">Text</th>
+          <td class="textColumn" mat-cell *matCellDef="let row">
+            <div class="textArea">
+              <p class="text" *ngIf="row.id !== idEdit">{{row.text}}</p>
+              <textarea #editTextAria maxlength="100" class="editText" type="text" *ngIf="row.id === idEdit" [ngModel]="row.text"></textarea>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="status">
+              <mat-checkbox class="check" color="primary" [checked]="(row.status === 10) || (row.status === 11)" *ngIf="showButton" boolean
+                            (change)="checked($event, row.id, row.text)"></mat-checkbox>
+              <div class="status-block">
+                <q *ngIf="(row.status === 0) || (row.status === 1)">active</q>
+                <q *ngIf="(row.status === 10) || (row.status === 11)">inactive</q>
+                <q *ngIf="((row.status === 1) || (row.status === 11)) && showButton">edited by admin</q>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="btn-block">
+              <button class="btn" (click)="startEdit(row.id)" *ngIf="row.id !== idEdit">Edit text</button>
+              <button class="btn" (click)="editTask(row.id, this.editTextAria.nativeElement.value, row.status)" *ngIf="row.id === idEdit">Save</button>
+              <button class="btn-white" (click)="endEdit()" *ngIf="row.id === idEdit">Cancel</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [length]="resultsLength" showFirstLastButtons  [pageSize]="3"></mat-paginator>
+    </div>
+  </div>
+</div>
