@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.changeToken$ = this.taskBackService.subscribeToToken().subscribe(result => {
       this.showButton = result;
     })
-    if(localStorage.getItem("token") !== '') {
+    if(localStorage.getItem("token")) {
       this.showButton = true;
     }
   }
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   out() {
-    this.taskBackService.setToken('');
+    this.taskBackService.deleteToken();
   }
 
   ngOnDestroy() {

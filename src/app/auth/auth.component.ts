@@ -59,7 +59,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   ngOnDestroy () {
     this.auth$.unsubscribe();
-    this.changeValue$.unsubscribe();
+    this.changeValue$?.unsubscribe();
   }
 
 }

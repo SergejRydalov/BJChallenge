@@ -63,11 +63,13 @@ export class TaskBackService {
   }
 
   setToken(token: string) {
-    localStorage.setItem("token", token);
-    if (localStorage.getItem("token") !== '') {
-      this.tokenSubject.next(true);
-    } else {
-      this.tokenSubject.next(false);
-    }
+    localStorage.setItem("token", token) ;
+    this.tokenSubject.next(true);
+
+  }
+
+  deleteToken() {
+    localStorage.removeItem("token");
+    this.tokenSubject.next(false);
   }
 }

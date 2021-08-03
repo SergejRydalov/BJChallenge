@@ -57,7 +57,7 @@ export class TableTaskComponent implements AfterViewInit,OnInit, OnDestroy {
       this.showButton = result;
       this.changeDisplayedColumns();
     });
-    (localStorage.getItem("token") !== '') ? this.showButton = true : this.showButton = false;
+    (localStorage.getItem("token")) ? this.showButton = true : this.showButton = false;
     this.changeDisplayedColumns();
   }
 
