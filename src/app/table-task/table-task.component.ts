@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from "@angular/material/sort";
 import {TaskBackService} from '../services/task-back.service'
-import {merge, of as observableOf} from 'rxjs';
+import {merge, of as observableOf, Subscription} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {AuthComponent} from "../auth/auth.component";
@@ -22,7 +22,13 @@ export interface TaskIssue {
   templateUrl: './table-task.component.html',
   styleUrls: ['./table-task.component.scss']
 })
-export class TableTaskComponent implements AfterViewInit,OnInit {
+export class TableTaskComponent implements AfterViewInit,OnInit, OnDestroy {
+
+  private changeTaskList$: Subscription;
+  private changeToken$: Subscription;
+  private changeTask$: Subscription;
+  private changeSort$: Subscription;
+
 
   displayedColumns: string[] = [];
 
@@ -39,15 +45,15 @@ export class TableTaskComponent implements AfterViewInit,OnInit {
   @ViewChild('editTextAria') editTextAria: ElementRef;
 
 
-  constructor(private taskBackService: TaskBackService, private dialog: MatDialog) {
-  }
+  constructor(private taskBackService: TaskBackService, private dialog: MatDialog) {}
+
   ngOnInit() {
-    this.taskBackService.subscribeToAddTask().subscribe(result => {
+    this.changeTaskList$ = this.taskBackService.subscribeToAddTask().subscribe(result => {
       if (result === true) {
         this.ngAfterViewInit();
       }
     });
-    this.taskBackService.subscribeToToken().subscribe(result => {
+    this.changeToken$ = this.taskBackService.subscribeToToken().subscribe(result => {
       this.showButton = result;
       this.changeDisplayedColumns();
     });
@@ -57,7 +63,7 @@ export class TableTaskComponent implements AfterViewInit,OnInit {
 
   ngAfterViewInit() {
 
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex);
+    this.changeSort$ = this.sort.sortChange.subscribe(() => this.paginator.pageIndex);
     merge(this.sort.sortChange, this.paginator.page).pipe(startWith({}), switchMap(() => {
         this.isLoadingResults = true;
         return this.taskBackService!.getTaskSets(
@@ -102,7 +108,7 @@ export class TableTaskComponent implements AfterViewInit,OnInit {
     formData.append('token', <any>localStorage.getItem("token"));
     formData.append('text', text);
     formData.append('status', status.toString());
-    this.taskBackService!.postEditTask(id, formData).subscribe(task => {
+    this.changeTask$ = this.taskBackService!.postEditTask(id, formData).subscribe(task => {
       if (task.status === "ok") {
         this.taskBackService.setNewTaskSubject(true);
       } else {
@@ -119,6 +125,13 @@ export class TableTaskComponent implements AfterViewInit,OnInit {
     let status: number;
     (event.checked) ? status = 11 : status = 1;
     this.editTask(id, text, status);
+  }
+
+  ngOnDestroy(){
+    this.changeTaskList$.unsubscribe();
+    this.changeToken$.unsubscribe();
+    this.changeTask$.unsubscribe()
+    this.changeSort$.unsubscribe()
   }
 }
 

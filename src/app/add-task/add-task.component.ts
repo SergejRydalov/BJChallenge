@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TaskBackService} from '../services/task-back.service';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-add-task',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.scss']
 })
-export class AddTaskComponent implements OnInit {
+export class AddTaskComponent implements OnInit, OnDestroy {
   showFormAddTask = false;
   submitted = false;
   showMessage = false;
   formAddTask: FormGroup;
+  newTask$: Subscription;
 
   constructor(private taskBackService: TaskBackService) { }
 
@@ -31,7 +33,7 @@ export class AddTaskComponent implements OnInit {
 
     if(this.formAddTask.valid) {
       this.submitted = false;
-      this.taskBackService!.postNewTask(formData).subscribe(task => {
+      this.newTask$ = this.taskBackService!.postNewTask(formData).subscribe(task => {
         if (task.status === "ok") {
           this.taskBackService.setNewTaskSubject(true);
           this.formAddTask.reset();
@@ -43,4 +45,9 @@ export class AddTaskComponent implements OnInit {
       this.submitted = true;
     }
   }
+
+  ngOnDestroy() {
+    this.newTask$.unsubscribe();
+  }
+
 }

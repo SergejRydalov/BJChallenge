@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {AuthComponent} from "./auth/auth.component";
 import {TaskBackService} from "./services/task-back.service";
+import {Subscription} from "rxjs";
 
 
 
@@ -10,14 +11,15 @@ import {TaskBackService} from "./services/task-back.service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
+  private changeToken$: Subscription;
   showButton = false;
 
   constructor(private dialog: MatDialog, private taskBackService: TaskBackService) {}
 
   ngOnInit() {
-    this.taskBackService.subscribeToToken().subscribe(result => {
+    this.changeToken$ = this.taskBackService.subscribeToToken().subscribe(result => {
       this.showButton = result;
     })
     if(localStorage.getItem("token") !== '') {
@@ -35,5 +37,9 @@ export class AppComponent implements OnInit {
 
   out() {
     this.taskBackService.setToken('');
+  }
+
+  ngOnDestroy() {
+    this.changeToken$.unsubscribe();
   }
 }
